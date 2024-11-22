@@ -17,14 +17,8 @@ from whisper.utils import get_writer
 load_dotenv()
 model = whisper.load_model("turbo")
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-
-
-
-
-
-
-
-
+gem_model = genai.GenerativeModel("gemini-1.5-flash")
+chat = gem_model.start_chat()
 
 #Converts Whisper transcription results to a .vtt file.
 def whisper_to_vtt(result, output_dir, input_audio):
@@ -121,12 +115,31 @@ def splice_silent_sections(input_file, output_file):
     print(f"Audio file has been saved at {output_file}.")
     print("=============================================/n")
 
-    result = model.transcribe(output_file,language="english", verbose= True)
-    whisper_to_file_format(result,"",output_file,"vtt")
-    whisper_to_file_format(result, "", output_file, "txt")
-    # whisper_to_vtt(result, "", output_file)
+    return output_file
 
-    filename =  output_file[:-3]
+
+def trim_transcribe_summarize(audio_input_file, audio_output_file):
+    print("Trimming transcribe summarize...")
+    filename = output_file[:-3]
+    audio_splice_result = splice_silent_sections(audio_input_file, audio_output_file)
+
+    transcription_result = transcribe_audio_with_whisper(audio_splice_result)
+
+    transcript_summary = summarize_transcription(transcription_result, filename)
+    custom_timestamps= create_custom_timestamps_from_transcription(transcription_result, filename)
+    blog_template = create_blog_summary_from_transcription(transcription_result, filename)
+    refined_blog = refine_blog_summary(filename)
+
+
+def transcribe_audio_with_whisper(audio_file):
+
+    result = model.transcribe(audio_file, language="english", verbose=True)
+    whisper_to_file_format(result, "", audio_file, "vtt")
+    whisper_to_file_format(result, "", audio_file, "txt")
+
+    return result
+
+def summarize_transcription(transcription_result,filename):
 
     print("=============================================/n")
     print("Summary of audio transcription results")
@@ -135,65 +148,71 @@ def splice_silent_sections(input_file, output_file):
     response = ollama.chat(model='llama3.2', messages=[
         {
             'role': 'user',
-            'content': s_prompts.summary_prompt +  result["text"],
+            'content': s_prompts.summary_prompt + transcription_result["text"],
         },
     ])
 
-    with open( filename + '-ytsummary.txt', 'w') as file:
+    with open(filename + '-ytsummary.txt', 'w') as file:
         file.write(response['message']['content'])
 
     print("=============================================/n")
     print(response['message']['content'])
     print("=============================================/n")
 
-    gem_model = genai.GenerativeModel("gemini-1.5-flash")
-    chat = gem_model.start_chat()
-    first_response = chat.send_message(s_prompts.timestamp_prompt + result["text"])
+    return response['message']['content']
 
-    # gem_response = gem_model.generate_content( s_prompts.timestamp_prompt + result["text"] )
+def create_custom_timestamps_from_transcription(transcription_result, filename):
 
-    with open( filename + '-timestamps.txt', 'w') as file:
+    first_response = chat.send_message(s_prompts.timestamp_prompt + transcription_result["text"])
+
+    with open(filename + '-timestamps.txt', 'w') as file:
         file.write(first_response.text)
 
     print("=============================================/n")
     print(first_response.text)
     print("=============================================/n")
 
-    second_response = chat.send_message(s_prompts.blog_summary + result["text"])
+    return first_response.text
 
-    with open( filename + '-summaryone.txt', 'w') as file:
+def create_blog_summary_from_transcription(transcription_result, filename):
+
+    second_response = chat.send_message(s_prompts.blog_summary + transcription_result["text"])
+
+    with open(filename + '-summaryone.txt', 'w') as file:
         file.write(second_response.text)
 
     print("=============================================/n")
     print(second_response.text)
     print("=============================================/n")
 
+    return second_response.text
+
+def refine_blog_summary(filename):
     third_response = chat.send_message(s_prompts.refine_blog_summary)
 
-    with open( filename + '-summarytwo.txt', 'w') as file:
+    with open(filename + '-summarytwo.txt', 'w') as file:
         file.write(third_response.text)
 
     print("=============================================/n")
     print(third_response.text)
     print("=============================================/n")
 
+    return third_response.text
+
+
 # CREATING CMD LINE INTERFACE
 if __name__ == "__main__":
     import sys
 
     if len(sys.argv) != 3:
-        print("Usage: python trimaudiosilence.py <input_file> <output_file>")
+        print("Usage: python trimtranscribesummarize.py <input_file> <output_file>")
         exit()
 
     input_file = sys.argv[1]
     output_file = sys.argv[2]
 
     try:
-        # print(s_prompts.timestamp_prompt)
-        # gem_model = genai.GenerativeModel("gemini-1.5-flash")
-        # response = gem_model.generate_content("Write a story about a magic backpack.")
-        # print(response.text)
-        splice_silent_sections(input_file, output_file)
+        trim_transcribe_summarize(input_file, output_file)
     except Exception as e:
         print(f"Error: {e}")
 
