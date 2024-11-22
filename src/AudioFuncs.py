@@ -2,9 +2,7 @@ import librosa
 import numpy as np
 import soundfile as sf
 
-input_file_name = "your-file-name" # Insert name of file to trim silence
-input_file = input_file_name + ".wav" # Change file type if needed (E.G. ".wav", ".mp3")
-
+# Splices out silent/low volume sections from an audio file.
 def splice_silent_sections(input_file, output_file):
     silence_threshold_rms=0.001
     min_silence_len=10
@@ -15,9 +13,9 @@ def splice_silent_sections(input_file, output_file):
     Args:
         input_file (str): Path to the input audio file.
         output_file (str): Path to the output audio file.
-        silence_threshold_rms (float, optional): RMS amplitude threshold for silence. Defaults to 0.01.
-        min_silence_len (int, optional): Minimum length of a silent segment to be spliced out, in samples. Defaults to 1000 samples.
-        sample_rate (int, optional): Sample rate of the audio. Defaults to 22050 Hz.
+        (TODO) silence_threshold_rms (float, optional): RMS amplitude threshold for silence. Defaults to 0.01.
+        (TODO) min_silence_len (int, optional): Minimum length of a silent segment to be spliced out, in samples. Defaults to 1000 samples.
+        (TODO) sample_rate (int, optional): Sample rate of the audio. Defaults to 22050 Hz.
     """
 
     # Load the audio file
@@ -52,6 +50,8 @@ def splice_silent_sections(input_file, output_file):
     # Write the spliced audio to a new file
     sf.write(output_file, np.array(spliced_audio), sr)
 
-# Example usage:
-output_file =  input_file_name + "_spliced.wav" # Append sliced to file name for clarity on output file
-splice_silent_sections(input_file, output_file)
+    print("=============================================/n")
+    print(f"Audio file has been saved at {output_file}.")
+    print("=============================================/n")
+
+    return output_file
