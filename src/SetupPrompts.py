@@ -1,0 +1,8 @@
+
+timestamp_prompt = "Please create a list of timestamps that cover major and key topics covered in the timestamped transcript that I will share below. In the transcript the timestamps will be denoted like this 'MM:SS.MS --> MM:SS.MS' where MM designates minutes, SS designates seconds, and MS designates Miliseconds. For example,  06:13.312 corresponds to 6 minutes, 13 seconds and 312 milliseconds. And for example,  06:13.312 --> 06:14.456 corresponds to an interval between 6 minutes, 13 seconds and 312 milliseconds and 6 minutes, 14 seconds and 456 milliseconds. Your response should  ONLY be an output Timestamps list that have this format of 'MM:SS' where MM designates Minutes and SS designates seconds (E.G. 06:12 corresponds to 6 Minutes and 12 seconds) followed by a dash with the key point you identify. You response should look like this and ONLY this: 00:00 - Key Topic 1. Here is the Timestamped transcript that I would like you to evaluate, and summarize into key points using the corresponding timestamps. Only use the transcript listed below for evaluating and no other transcript from any other sources: "
+
+summary_prompt = "Create a short 3-5 sentence summary of the share audio transcription result in a format best for a YouTube description. only include the summary in your response.  Transcript: "
+
+blog_summary = "Create a summary of this given transcript as if writing a blog for developers on a developer focused blogging site like dev.to. Please follow these specific instructions when creating the summary: 1. Response should be entirely in paragraph form not using bullet points 2. Write blog in a step-by-step style"
+
+refine_blog_summary = "rewrite your last response in paragraph form not using bullet points"
