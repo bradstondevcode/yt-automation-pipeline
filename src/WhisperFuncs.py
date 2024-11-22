@@ -27,13 +27,16 @@ def whisper_to_file_format(result, output_dir, input_audio, output_format):
     vtt_writer(result, input_audio, options)
 
 # Use Whisper to transcribe audio and create .txt transcription file if desired.
-def transcribe_audio_with_whisper(audio_file, print_to_file=False):
+def transcribe_audio_with_whisper(audio_file, print_to_file=False, create_vtt=False, create_srt=False, create_json=False):
     """
     Use Whisper to transcribe audio and create .txt transcription file if desired.
 
     Args:
         audio_file (str): Path to the output audio file.
         print_to_file (bool): Set true if output should be printed to file.
+        create_vtt (bool): Set true to create VTT file.
+        create_srt (bool): Set true to create SRT file.
+        create_json (bool): Set true to create JSON file.
     Returns:
         result (object): Transcription data object from Whisper
     """
@@ -45,7 +48,28 @@ def transcribe_audio_with_whisper(audio_file, print_to_file=False):
         print("=============================================/n")
         print("Printing Transcript to file...")
         print("=============================================/n")
-        # Convert transcript to .srt file
+        # Convert transcript to .txt file
         whisper_to_file_format(result, "", audio_file, "txt")
+
+    if create_vtt:
+        print("=============================================/n")
+        print("Creating VTT file...")
+        print("=============================================/n")
+        # Convert transcript to .vtt file
+        whisper_to_file_format(result, "", audio_file, "vtt")
+
+    if create_srt:
+        print("=============================================/n")
+        print("Creating SRT file...")
+        print("=============================================/n")
+        # Convert transcript to .vtt file
+        whisper_to_file_format(result, "", audio_file, "srt")
+
+    if create_json:
+        print("=============================================/n")
+        print("Creating JSON file...")
+        print("=============================================/n")
+        # Convert transcript to .vtt file
+        whisper_to_file_format(result, "", audio_file, "json")
 
     return result

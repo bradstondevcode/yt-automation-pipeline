@@ -9,6 +9,9 @@ genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 gem_model = genai.GenerativeModel("gemini-1.5-flash")
 chat = gem_model.start_chat()
 
+#TODO: Add ability to create custom timestamps from transcription file
+#TODO: Add ability to create blog summary from transcription file
+
 def create_custom_timestamps_from_transcription(transcription_result, filename):
     """
     Create a custom timestamps text and file from transcription result.

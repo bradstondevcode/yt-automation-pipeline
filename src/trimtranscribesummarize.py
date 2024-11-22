@@ -22,11 +22,8 @@ def trim_transcribe_summarize(audio_input_file, audio_output_file):
     # Splice out unwanted silence and low volume areas in audio_input_file
     audio_splice_result = af.splice_silent_sections(audio_input_file, audio_output_file)
 
-    # Transcribe trimmed/spliced audio using OpenAI Whisper
-    transcription_result = wf.transcribe_audio_with_whisper(audio_splice_result, True)
-
-    # Convert transcript to .vtt file
-    wf.whisper_to_file_format(transcription_result, "", audio_splice_result, "vtt")
+    # Transcribe trimmed/spliced audio using OpenAI Whisper (print .txt & .vtt file)
+    transcription_result = wf.transcribe_audio_with_whisper(audio_splice_result, True, True)
 
     # Create Summary of transcript using Meta LLama
     transcript_summary = of.summarize_transcription(transcription_result, filename)

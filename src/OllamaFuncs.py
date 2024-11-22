@@ -2,6 +2,9 @@ import ollama
 import SetupPrompts as s_prompts
 # ollama runs at http://localhost:11434
 
+
+#TODO: Add ability to summarize transcription file
+
 def summarize_transcription(transcription_result,filename):
     """
     Use Whisper to transcribe audio and create a .vtt and .srt transcription file for captioning.
