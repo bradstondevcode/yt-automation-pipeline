@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 import SetupPrompts as s_prompts
+import GenFuncs as gen_funcs
 
 load_dotenv()
 
@@ -74,3 +75,29 @@ def refine_blog_summary(filename):
     print("=============================================/n")
 
     return third_response
+
+def create_highlights_from_transcription_file(transcription_vtt_file, highlights_file):
+    """
+        Refined summary using instructions to make blog summary and file based on first blog summary attempt.
+
+        Args:
+            transcription_vtt_file (str): Name of output audio file.
+        Returns:
+            second_response (object): response data object from Google Gemini
+        """
+
+    transcription_vtt_str = gen_funcs.read_vtt_file(transcription_vtt_file)
+
+    filename = transcription_vtt_file[:-4]
+    response = gem_model.generate_content(s_prompts.transcript_highlight_prompt + transcription_vtt_str)
+
+    # TODO: Clean output to remove Markup text
+
+    with open(filename + '-highlight.txt', 'w') as file:
+        file.write(response.text)
+
+    print("=============================================/n")
+    print(response.text)
+    print("=============================================/n")
+
+    return response
