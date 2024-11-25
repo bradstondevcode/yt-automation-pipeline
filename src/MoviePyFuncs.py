@@ -1,5 +1,6 @@
 from moviepy import *
 import json
+import GenFuncs as gf
 
 def trim_movie(input_clip_file, output_clip_file):
     """
@@ -40,9 +41,17 @@ def trim_video_from_json(input_clip_file, output_clip_file, json_file):
 
     for highlight in json_data:
         current_topic = highlight['topic']
-        current_start_time = highlight['startTime']
-        current_end_time = highlight['endTime']
+        current_start_time_str = highlight['startTime']
+        current_end_time_str = highlight['endTime']
         print("=====================")
+
+        current_start_time = gf.convert_vtt_timestamp_to_seconds(current_start_time_str)
+        current_end_time = gf.convert_vtt_timestamp_to_seconds(current_end_time_str)
+
+        print(f"Start Time: {current_start_time}")
+        print(f"Start Time: {current_end_time}")
+        print("=====================")
+
         clip = VideoFileClip(input_clip_file).with_subclip(current_start_time, current_end_time)
         video = CompositeVideoClip([clip])
         video.write_videofile(filename + current_topic + ".mp4")
