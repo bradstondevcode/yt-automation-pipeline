@@ -4,7 +4,7 @@ import argparse
 
 # CREATING CMD LINE INTERFACE FOR transcribe_audio_with_whisper function
 """
-Use Command Line to Trim, Transcribe, and Summarize audio file
+Use Command Line to Transcribe audio with Whisper
 
 Args:
     input_file (str): Path to the input audio file.

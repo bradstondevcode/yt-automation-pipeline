@@ -4,8 +4,6 @@ import argparse
 import AudioFuncs as af
 import OllamaFuncs as of
 import GeminiFuncs as gf
-import SetupPrompts as s_prompts
-
 
 def trim_transcribe_summarize(audio_input_file, audio_output_file):
     """
