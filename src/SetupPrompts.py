@@ -6,3 +6,5 @@ summary_prompt = "Create a short 3-5 sentence summary of the share audio transcr
 blog_summary = "Create a summary of this given transcript as if writing a blog for developers on a developer focused blogging site like dev.to. Please follow these specific instructions when creating the summary: 1. Response should be entirely in paragraph form not using bullet points 2. Write blog in a step-by-step style"
 
 refine_blog_summary = "rewrite your last response in paragraph form not using bullet points"
+
+transcript_highlight_prompt = "Can you analyze this timestamped YouTube video script and identify potential highlight clips with their corresponding time codes for developers interested in learning Unreal Engine Blueprints? Output your response in JSON format. Only Share the JSON output without any other text or markup text like ```json. Ensure the data is seperated into 'topic',, 'startTime' and 'endTime'"
