@@ -1,40 +1,39 @@
 from moviepy import *
 import json
-import GenFuncs as gf
+from . import GenFuncs as gf
 
-def trim_movie(input_clip_file, output_clip_file):
+
+def trim_video_clip(input_video_file, output_video_file, start_time, end_time):
     """
-        Trim video clip
+        Trim video clip from given Start time and given End time
 
         Args:
-            input_clip_file (str): Path of input video file.
-            output_clip_file (str): Path of output video file.
+            input_video_file (str): Path of input video file.
+            output_video_file (str): Path of output video file.
+            start_time (float): Start time of video clip where to begin trimming.
+            end_time (float): End time of video clip where to end trimming.
 
         Returns:
             trimmed_clip (object): Trimmed video clip
         """
 
-    clip = VideoFileClip(input_clip_file).with_subclip(10, 20)
+    clip = VideoFileClip(input_video_file).with_subclip(start_time, end_time)
 
     video = CompositeVideoClip([clip])
 
-    video.write_videofile(input_clip_file)
+    video.write_videofile(output_video_file)
 
 
-def trim_video_from_json(input_clip_file, output_clip_file, json_file):
+def trim_video_from_json(input_video_file, json_file):
     """
-        Trim video clip from json file
+        Trim video file into specified highlight clips from give JSON file
 
         Args:
-            input_clip_file (str): Path of input video file.
-            output_clip_file (str): Path of output video file.
+            input_video_file (str): Path of input video file.
             json_file (str): Path of json file
-
-        Returns:
-            trimmed_clip (object): Trimmed video clip
         """
 
-    filename = input_clip_file[:-4]
+    filename = input_video_file[:-4]
 
     with open(json_file, 'r') as f:
         json_data = json.load(f)
@@ -52,11 +51,11 @@ def trim_video_from_json(input_clip_file, output_clip_file, json_file):
         print(f"Start Time: {current_end_time}")
         print("=====================")
 
-        clip = VideoFileClip(input_clip_file).with_subclip(current_start_time, current_end_time)
+        clip = VideoFileClip(input_video_file).with_subclip(current_start_time, current_end_time)
         video = CompositeVideoClip([clip])
         video.write_videofile(filename + current_topic + ".mp4")
 
-    print("Completed!")
+    print(" Video Trimming Completed!")
 
 
 def extract_audio(input_clip_path, output_audio_file):
@@ -79,3 +78,5 @@ def extract_audio(input_clip_path, output_audio_file):
     # Close the video and audio clips
     video_clip.close()
     audio_clip.close()
+
+    return output_audio_file

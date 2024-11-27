@@ -1,8 +1,8 @@
 import argparse
 
-# CREATING CMD LINE INTERFACE FOR transcribe_audio_with_whisper function
+# CREATING CMD LINE INTERFACE FOR extract_audio_from_video function
 """
-Use Command Line to Trim, Transcribe, and Summarize audio file
+Use Command Line to Extract Audio from a audio file
 
 Args:
     input_video_file (str): Path to the input audio file.
@@ -25,7 +25,8 @@ if __name__ == "__main__":
 
     try:
         # Import here to save unnecessary library load if cmd call is incorrect
-        import MoviePyFuncs as mf
+        from funcs import MoviePyFuncs as mf
+
         mf.extract_audio(args.input_video_file, args.output_audio_file)
     except Exception as e:
         print(f"Error: {e}")

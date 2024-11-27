@@ -27,12 +27,13 @@ def whisper_to_file_format(result, output_dir, input_audio, output_format):
     vtt_writer(result, input_audio, options)
 
 # Use Whisper to transcribe audio and create .txt transcription file if desired.
-def transcribe_audio_with_whisper(audio_file, print_to_file=False, create_vtt=False, create_srt=False, create_json=False):
+def transcribe_audio_with_whisper(audio_file, output_filename="", print_to_file=False, create_vtt=False, create_srt=False, create_json=False):
     """
     Use Whisper to transcribe audio and create .txt transcription file if desired.
 
     Args:
         audio_file (str): Path to the output audio file.
+        output_filename (str): Path to the output file name.
         print_to_file (bool): Set true if output should be printed to file.
         create_vtt (bool): Set true to create VTT file.
         create_srt (bool): Set true to create SRT file.
@@ -40,6 +41,10 @@ def transcribe_audio_with_whisper(audio_file, print_to_file=False, create_vtt=Fa
     Returns:
         result (object): Transcription data object from Whisper
     """
+
+    if output_filename == "":
+        output_filename = audio_file
+
 
     # Retrieve transcript of audio file from Whisper
     result = model.transcribe(audio_file, language="english", verbose=True)
@@ -49,27 +54,27 @@ def transcribe_audio_with_whisper(audio_file, print_to_file=False, create_vtt=Fa
         print("Printing Transcript to file...")
         print("=============================================/n")
         # Convert transcript to .txt file
-        whisper_to_file_format(result, "", audio_file, "txt")
+        whisper_to_file_format(result, "", output_filename, "txt")
 
     if create_vtt:
         print("=============================================/n")
         print("Creating VTT file...")
         print("=============================================/n")
         # Convert transcript to .vtt file
-        whisper_to_file_format(result, "", audio_file, "vtt")
+        whisper_to_file_format(result, "", output_filename, "vtt")
 
     if create_srt:
         print("=============================================/n")
         print("Creating SRT file...")
         print("=============================================/n")
         # Convert transcript to .vtt file
-        whisper_to_file_format(result, "", audio_file, "srt")
+        whisper_to_file_format(result, "", output_filename, "srt")
 
     if create_json:
         print("=============================================/n")
         print("Creating JSON file...")
         print("=============================================/n")
         # Convert transcript to .vtt file
-        whisper_to_file_format(result, "", audio_file, "json")
+        whisper_to_file_format(result, "", output_filename, "json")
 
     return result
